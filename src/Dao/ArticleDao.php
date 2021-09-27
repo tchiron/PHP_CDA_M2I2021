@@ -5,7 +5,7 @@ namespace App\Dao;
 use App\Model\Article;
 use PDO;
 
-class ArticleDao
+class ArticleDao implements ArticleDaoInterface
 {
     public function getAll(): array
     {
@@ -26,8 +26,7 @@ class ArticleDao
 
         // Parser les données récupérer
         // et en faire un tableau d'Article
-        foreach($result as $key => $article)
-        {
+        foreach ($result as $key => $article) {
             $result[$key] = (new Article())->setId($article['id'])
                 ->setTitle($article['title'])
                 ->setContent($article['content'])
@@ -35,5 +34,18 @@ class ArticleDao
         }
 
         return $result;
+    }
+
+    public function getById(int $id): Article
+    {
+        return new Article();
+    }
+
+    public function new(Article $article): void
+    {
+    }
+
+    public function deleteById(int $id): void
+    {
     }
 }
