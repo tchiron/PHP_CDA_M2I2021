@@ -3,18 +3,22 @@
 namespace App\Controller;
 
 use App\Dao\ArticleDao;
+use PDOException;
 
 class ArticleController
 {
     public function index(): void
     {
-        echo "<h1>Liste des articles</h1>";
         // Récupérer tous les articles
-        $articles = (new ArticleDao())->getAll();
+        try {
+            $articles = (new ArticleDao())->getAll();
+        } catch (PDOException $e) {
+            echo $e->getMessage();
+            // require implode(DIRECTORY_SEPARATOR, [TEMPLATES, "error500.html.php"]);
+        }
 
         // Appeler (inclure) la vue
-        require TEMPLATES . DIRECTORY_SEPARATOR . "article" . DIRECTORY_SEPARATOR . "index.html.php";
-
+        require implode(DIRECTORY_SEPARATOR, [TEMPLATES, "article", "index.html.php"]);
 
         // ob_start();
         // require "index.html.php";
