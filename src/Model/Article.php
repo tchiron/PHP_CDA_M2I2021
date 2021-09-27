@@ -1,11 +1,15 @@
 <?php
 
+namespace App\Model;
+
+use DateTime;
+
 class Article
 {
     protected int $id;
     protected string $title;
     protected string $content;
-    protected DateTime $created_at;
+    protected string $created_at;
 
     /**
      * Get the value of id
@@ -82,9 +86,9 @@ class Article
     /**
      * Get the value of created_at
      *
-     * @return DateTime
+     * @return string
      */
-    public function getCreatedAt(): DateTime
+    public function getCreatedAt(): string
     {
         return $this->created_at;
     }
@@ -92,11 +96,11 @@ class Article
     /**
      * Set the value of created_at
      *
-     * @param DateTime $created_at
+     * @param string $created_at
      *
      * @return self
      */
-    public function setCreatedAt(DateTime $created_at): self
+    public function setCreatedAt(string $created_at): self
     {
         $this->created_at = $created_at;
 
