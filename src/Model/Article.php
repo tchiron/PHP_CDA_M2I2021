@@ -2,8 +2,6 @@
 
 namespace App\Model;
 
-use DateTime;
-
 class Article
 {
     protected int $id;
