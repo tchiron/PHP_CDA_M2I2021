@@ -2,20 +2,17 @@
 
 use App\Controller\ArticleController;
 
-require_once __DIR__ . "/../vendor/autoload.php";
-require_once __DIR__ . DIRECTORY_SEPARATOR . ".." . DIRECTORY_SEPARATOR . "config" . DIRECTORY_SEPARATOR . "config.php";
-
-dump($_SERVER);
+require_once implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "config", "config.php"]);
 
 // Récupérer la uri/url
 $uri = filter_input(INPUT_SERVER, "REQUEST_URI");
 
 // Envoyer l'uri au router
-if ("/" === $uri) { // "/article"
+if (preg_match("#^/$#", $uri)) { // "/article"
     (new ArticleController())->index();
 }
+// "/article/new" => ArticleController->new
 // "/article/id/show" => ArticleController->show
-// "/article/id/new" => ArticleController->new
 // "/article/id/edit" => ArticleController->edit
 // "/article/id/delete" => ArticleController->delete
 
