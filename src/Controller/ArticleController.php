@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Dao\ArticleDao;
+use App\Model\Article;
 use PDOException;
 
 class ArticleController
@@ -28,16 +29,87 @@ class ArticleController
         // require "layout.html.php";
     }
 
-    public function show(): void
+    public function new(): void
+    {
+        $request_method = filter_input(INPUT_SERVER, "REQUEST_METHOD");
+
+        if ('GET' === $request_method) {
+            require implode(DIRECTORY_SEPARATOR, [TEMPLATES, 'article', 'new.html.php']);
+
+            // ob_start();
+            // require "show.html.php";
+            // $content = ob_get_clean();
+
+            // // Appeler le layout
+            // require "layout.html.php";
+        } elseif ('POST' === $request_method) {
+            $args = [
+                "title" => [],
+                "content" => []
+            ];
+
+            $article_post = filter_input_array(INPUT_POST, $args);
+
+            if (isset($article_post["title"]) && isset($article_post["content"])) {
+                if (empty(trim($article_post["title"]))) {
+                    $error_messages[] = "Titre inexistant";
+                }
+
+                if (empty(trim($article_post["content"]))) {
+                    $error_messages[] = "Contenu inexistant";
+                }
+            }
+
+            $article = (new Article())->setTitle($article_post["title"])->setContent($article_post["content"]);
+
+            if (empty($error_messages)) {
+                try {
+                    $id = (new ArticleDao())->new($article);
+                    header(sprintf("Location: /article/%d/show", $id));
+                    exit;
+                } catch (PDOException $e) {
+                    echo $e->getMessage();
+                }
+            } else {
+                require implode(DIRECTORY_SEPARATOR, [TEMPLATES, 'article', 'new.html.php']);
+            }
+        }
+    }
+
+    public function show(int $id): void
     {
         // Récupérer un article en fonction de son id
+        try {
+            $article = (new ArticleDao())->getById($id);
 
-        // Appeler (inclure) la vue
-        ob_start();
-        require "show.html.php";
-        $content = ob_get_clean();
+            if (!is_null($article)) {
+                // Appeler (inclure) la vue
+                require implode(DIRECTORY_SEPARATOR, [TEMPLATES, "article", "show.html.php"]);
 
-        // Appeler le layout
-        require "layout.html.php";
+                // ob_start();
+                // require "show.html.php";
+                // $content = ob_get_clean();
+
+                // // Appeler le layout
+                // require "layout.html.php";
+            } else {
+                header("Location: /");
+                exit;
+            }
+        } catch (PDOException $e) {
+            echo $e->getMessage();
+        }
+    }
+
+    public function delete(int $id): void
+    {
+        // Supprimer un article en fonction de son id
+        try {
+            (new ArticleDao())->delete($id);
+            header("Location: /");
+            exit;
+        } catch (PDOException $e) {
+            echo $e->getMessage();
+        }
     }
 }
