@@ -10,7 +10,7 @@ class ArticleDao extends AbstractDao implements ArticleDaoInterface
     public function getAll(): array
     {
         // Récupération tous les articles
-        $req = self::getPdo()->prepare("SELECT * FROM article");
+        $req = $this->pdo->prepare("SELECT * FROM article");
         $req->execute();
         $result = $req->fetchAll(PDO::FETCH_ASSOC);
 
@@ -29,7 +29,7 @@ class ArticleDao extends AbstractDao implements ArticleDaoInterface
     public function new(Article $article): int
     {
         // Insertion de l'Article
-        $req = self::getPdo()->prepare(
+        $req = $this->pdo->prepare(
             "INSERT INTO article (title, content)
             VALUES (:title, :content)"
         );
@@ -38,13 +38,13 @@ class ArticleDao extends AbstractDao implements ArticleDaoInterface
             ":content" => $article->getContent()
         ]);
 
-        return $this->getPdo()->lastInsertId();
+        return $this->pdo->lastInsertId();
     }
 
     public function getById(int $id): ?Article
     {
         // Récupération de l'article
-        $req = self::getPdo()->prepare("SELECT * FROM article WHERE id = :id");
+        $req = $this->pdo->prepare("SELECT * FROM article WHERE id = :id");
         $req->execute([
             ":id" => $id
         ]);
@@ -66,7 +66,7 @@ class ArticleDao extends AbstractDao implements ArticleDaoInterface
     public function edit(Article $article): void
     {
         // Mise à jour l'article
-        $req = self::getPdo()->prepare("UPDATE article
+        $req = $this->pdo->prepare("UPDATE article
                             SET title = :title, content = :content
                             WHERE id = :id");
         $req->execute([
@@ -79,7 +79,7 @@ class ArticleDao extends AbstractDao implements ArticleDaoInterface
     public function delete(int $id): void
     {
         // Suppression de l'Article
-        $req = self::getPdo()->prepare("DELETE FROM article WHERE id = :id");
+        $req = $this->pdo->prepare("DELETE FROM article WHERE id = :id");
         $req->execute([
             ":id" => $id
         ]);
