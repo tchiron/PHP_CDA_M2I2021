@@ -6,3 +6,4 @@ require_once implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "vendor", "autoload.ph
 
 define('ROOT', dirname(__DIR__));
 define('TEMPLATES', implode(DIRECTORY_SEPARATOR, [__DIR__, "..", "views"]));
+define("SGBDR_FILE_PATH", implode(DIRECTORY_SEPARATOR, [ROOT, 'config', 'mysql.ini']));

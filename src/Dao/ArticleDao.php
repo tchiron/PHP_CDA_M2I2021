@@ -2,26 +2,15 @@
 
 namespace App\Dao;
 
-use App\Dao\Exception\NotFoundException;
 use App\Model\Article;
 use PDO;
 
-class ArticleDao implements ArticleDaoInterface
+class ArticleDao extends AbstractDao implements ArticleDaoInterface
 {
     public function getAll(): array
     {
-        // Connexion la BDD
-        $pdo = new PDO(
-            "mysql:host=localhost;dbname=m2i_blog;charset=UTF8",
-            "root",
-            "",
-            [
-                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
-            ]
-        );
-
-        // pour récupérer tous les articles
-        $req = $pdo->prepare("SELECT * FROM article");
+        // Récupération tous les articles
+        $req = self::getPdo()->prepare("SELECT * FROM article");
         $req->execute();
         $result = $req->fetchAll(PDO::FETCH_ASSOC);
 
@@ -39,18 +28,8 @@ class ArticleDao implements ArticleDaoInterface
 
     public function new(Article $article): int
     {
-        // Connexion la BDD
-        $pdo = new PDO(
-            "mysql:host=localhost;dbname=m2i_blog;charset=UTF8",
-            "root",
-            "",
-            [
-                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
-            ]
-        );
-
         // Insertion de l'Article
-        $req = $pdo->prepare(
+        $req = self::getPdo()->prepare(
             "INSERT INTO article (title, content)
             VALUES (:title, :content)"
         );
@@ -59,23 +38,13 @@ class ArticleDao implements ArticleDaoInterface
             ":content" => $article->getContent()
         ]);
 
-        return $pdo->lastInsertId();
+        return $this->getPdo()->lastInsertId();
     }
 
     public function getById(int $id): ?Article
     {
-        // Connexion la BDD
-        $pdo = new PDO(
-            "mysql:host=localhost;dbname=m2i_blog;charset=UTF8",
-            "root",
-            "",
-            [
-                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
-            ]
-        );
-
-        // pour récupérer l'article
-        $req = $pdo->prepare("SELECT * FROM article WHERE id = :id");
+        // Récupération de l'article
+        $req = self::getPdo()->prepare("SELECT * FROM article WHERE id = :id");
         $req->execute([
             ":id" => $id
         ]);
@@ -96,18 +65,8 @@ class ArticleDao implements ArticleDaoInterface
 
     public function edit(Article $article): void
     {
-        // Connexion la BDD
-        $pdo = new PDO(
-            "mysql:host=localhost;dbname=m2i_blog;charset=UTF8",
-            "root",
-            "",
-            [
-                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
-            ]
-        );
-
-        // pour mettre à jour l'article
-        $req = $pdo->prepare("UPDATE article
+        // Mise à jour l'article
+        $req = self::getPdo()->prepare("UPDATE article
                             SET title = :title, content = :content
                             WHERE id = :id");
         $req->execute([
@@ -119,20 +78,8 @@ class ArticleDao implements ArticleDaoInterface
 
     public function delete(int $id): void
     {
-        // Connexion la BDD
-        $pdo = new PDO(
-            "mysql:host=localhost;dbname=m2i_blog;charset=UTF8",
-            "root",
-            "",
-            [
-                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
-            ]
-        );
-
         // Suppression de l'Article
-        $req = $pdo->prepare(
-            "DELETE FROM article WHERE id = :id"
-        );
+        $req = self::getPdo()->prepare("DELETE FROM article WHERE id = :id");
         $req->execute([
             ":id" => $id
         ]);
