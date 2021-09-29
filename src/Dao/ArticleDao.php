@@ -2,6 +2,7 @@
 
 namespace App\Dao;
 
+use App\Dao\Exception\NotFoundException;
 use App\Model\Article;
 use PDO;
 
@@ -95,6 +96,25 @@ class ArticleDao implements ArticleDaoInterface
 
     public function edit(Article $article): void
     {
+        // Connexion la BDD
+        $pdo = new PDO(
+            "mysql:host=localhost;dbname=m2i_blog;charset=UTF8",
+            "root",
+            "",
+            [
+                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+            ]
+        );
+
+        // pour mettre à jour l'article
+        $req = $pdo->prepare("UPDATE article
+                            SET title = :title, content = :content
+                            WHERE id = :id");
+        $req->execute([
+            ":id" => $article->getId(),
+            ":title" => $article->getTitle(),
+            ":content" => $article->getContent()
+        ]);
     }
 
     public function delete(int $id): void

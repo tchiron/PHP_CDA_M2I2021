@@ -14,6 +14,8 @@ if (preg_match("#^/(article)?$#", $uri)) {
     (new ArticleController())->new();
 } elseif (preg_match("#^/article/(\d+)/show$#", $uri, $matches)) {
     (new ArticleController())->show($matches[1]);
+} elseif (preg_match("#^/article/(\d+)/edit$#", $uri, $matches)) {
+    (new ArticleController())->edit($matches[1]);
 } elseif (preg_match("#^/article/(\d+)/delete$#", $uri, $matches)) {
     (new ArticleController())->delete($matches[1]);
 }
