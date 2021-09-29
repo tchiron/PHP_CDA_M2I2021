@@ -19,14 +19,13 @@ class ArticleController
         }
 
         // Appeler (inclure) la vue
+        ob_start();
+        $title = 'Accueil';
         require implode(DIRECTORY_SEPARATOR, [TEMPLATES, "article", "index.html.php"]);
+        $content = ob_get_clean(); // Equivaut à ob_get_content() suivi de ob_end_clean()
 
-        // ob_start();
-        // require "index.html.php";
-        // $content = ob_get_clean();
-
-        // // Appeler le layout
-        // require "layout.html.php";
+        // Appeler le layout
+        require implode(DIRECTORY_SEPARATOR, [TEMPLATES, "layout.html.php"]);
     }
 
     public function new(): void
@@ -34,14 +33,13 @@ class ArticleController
         $request_method = filter_input(INPUT_SERVER, "REQUEST_METHOD");
 
         if ('GET' === $request_method) {
+            ob_start();
+            $title = 'Nouvel article';
             require implode(DIRECTORY_SEPARATOR, [TEMPLATES, 'article', 'new.html.php']);
+            $content = ob_get_clean();
 
-            // ob_start();
-            // require "show.html.php";
-            // $content = ob_get_clean();
-
-            // // Appeler le layout
-            // require "layout.html.php";
+            // Appeler le layout
+            require implode(DIRECTORY_SEPARATOR, [TEMPLATES, "layout.html.php"]);
         } elseif ('POST' === $request_method) {
             $args = [
                 "title" => [],
@@ -71,7 +69,13 @@ class ArticleController
                     echo $e->getMessage();
                 }
             } else {
+                ob_start();
+                $title = 'Nouvel article';
                 require implode(DIRECTORY_SEPARATOR, [TEMPLATES, 'article', 'new.html.php']);
+                $content = ob_get_clean();
+
+                // Appeler le layout
+                require implode(DIRECTORY_SEPARATOR, [TEMPLATES, "layout.html.php"]);
             }
         }
     }
@@ -84,14 +88,13 @@ class ArticleController
 
             if (!is_null($article)) {
                 // Appeler (inclure) la vue
+                ob_start();
+                $title = $article->getTitle();
                 require implode(DIRECTORY_SEPARATOR, [TEMPLATES, "article", "show.html.php"]);
+                $content = ob_get_clean();
 
-                // ob_start();
-                // require "show.html.php";
-                // $content = ob_get_clean();
-
-                // // Appeler le layout
-                // require "layout.html.php";
+                // Appeler le layout
+                require implode(DIRECTORY_SEPARATOR, [TEMPLATES, "layout.html.php"]);
             } else {
                 header("Location: /");
                 exit;
@@ -116,14 +119,13 @@ class ArticleController
                 exit;
             } elseif ('GET' === $request_method) {
                 // Appeler (inclure) la vue
+                ob_start();
+                $title = "Editer {$article->getTitle()}";
                 require implode(DIRECTORY_SEPARATOR, [TEMPLATES, "article", "edit.html.php"]);
+                $content = ob_get_clean();
 
-                // ob_start();
-                // require "show.html.php";
-                // $content = ob_get_clean();
-
-                // // Appeler le layout
-                // require "layout.html.php";
+                // Appeler le layout
+                require implode(DIRECTORY_SEPARATOR, [TEMPLATES, "layout.html.php"]);
             } elseif ('POST' === $request_method) {
                 $args = [
                     "title" => [],
@@ -149,7 +151,13 @@ class ArticleController
                     header(sprintf("Location: /article/%d/show", $id));
                     exit;
                 } else {
-                    require implode(DIRECTORY_SEPARATOR, [TEMPLATES, 'article', 'edit.html.php']);
+                    ob_start();
+                    $title = "Editer {$article->getTitle()}";
+                    require implode(DIRECTORY_SEPARATOR, [TEMPLATES, "article", "edit.html.php"]);
+                    $content = ob_get_clean();
+    
+                    // Appeler le layout
+                    require implode(DIRECTORY_SEPARATOR, [TEMPLATES, "layout.html.php"]);
                 }
             }
         } catch (PDOException $e) {

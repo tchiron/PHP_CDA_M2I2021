@@ -1,6 +1,3 @@
-<?php
-require TEMPLATES . DIRECTORY_SEPARATOR . "header.html.php";
-?>
 <article>
     <h2><?= $article->getTitle() ?></h2>
     <span><?= $article->getCreatedAt() ?></span>
@@ -8,6 +5,3 @@ require TEMPLATES . DIRECTORY_SEPARATOR . "header.html.php";
     <a href="<?= sprintf('/article/%d/edit', $article->getId()) ?>">Editer l'article</a>
     <a href="<?= sprintf('/article/%d/delete', $article->getId()) ?>">Supprimer l'article</a>
 </article>
-<?php
-require TEMPLATES . DIRECTORY_SEPARATOR . "footer.html.php";
-?>

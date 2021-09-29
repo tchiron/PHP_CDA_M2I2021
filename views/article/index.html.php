@@ -1,6 +1,3 @@
-<?php
-require TEMPLATES . DIRECTORY_SEPARATOR . "header.html.php";
-?>
 <h1>Liste des articles</h1>
 <?php foreach ($articles as $article) : ?>
     <article>
@@ -9,8 +6,4 @@ require TEMPLATES . DIRECTORY_SEPARATOR . "header.html.php";
         <p><?= nl2br($article->getContent()) ?></p>
         <a href="<?= sprintf('/article/%d/show', $article->getId()) ?>">Voir l'article</a>
     </article>
-<?php
-endforeach;
-
-require TEMPLATES . DIRECTORY_SEPARATOR . "footer.html.php";
-?>
+<?php endforeach; ?>
