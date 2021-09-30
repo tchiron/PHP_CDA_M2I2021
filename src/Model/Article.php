@@ -4,9 +4,24 @@ namespace App\Model;
 
 class Article
 {
+    /**
+     * @var int Identifiant de l'article
+     */
     protected int $id;
+
+    /**
+     * @var string Titre de l'article
+     */
     protected string $title;
+
+    /**
+     * @var string Contenu de l'article
+     */
     protected string $content;
+
+    /**
+     * @var string Date et heure de l'article
+     */
     protected string $created_at;
 
     /**

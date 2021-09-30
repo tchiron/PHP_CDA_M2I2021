@@ -7,9 +7,13 @@ use PDO;
 
 class ArticleDao extends AbstractDao implements ArticleDaoInterface
 {
+    /**
+     * Récupération de tous les articles
+     *
+     * @return Article[]
+     */
     public function getAll(): array
     {
-        // Récupération tous les articles
         $req = $this->pdo->prepare("SELECT * FROM article");
         $req->execute();
         $result = $req->fetchAll(PDO::FETCH_ASSOC);
@@ -26,9 +30,14 @@ class ArticleDao extends AbstractDao implements ArticleDaoInterface
         return $result;
     }
 
+    /**
+     * Insertion d'un nouvel article
+     *
+     * @param Article $article Article à insérer
+     * @return int Identifiant de l'article nouvellement créée
+     */
     public function new(Article $article): int
     {
-        // Insertion de l'Article
         $req = $this->pdo->prepare(
             "INSERT INTO article (title, content)
             VALUES (:title, :content)"
@@ -41,9 +50,14 @@ class ArticleDao extends AbstractDao implements ArticleDaoInterface
         return $this->pdo->lastInsertId();
     }
 
+    /**
+     * Récupération d'un article en fonction de son identifiant
+     *
+     * @param int $id Identifiant de l'article à récupérer
+     * @return Article|null Renvoi l'article si il en trouve un, sinon renvoi null
+     */
     public function getById(int $id): ?Article
     {
-        // Récupération de l'article
         $req = $this->pdo->prepare("SELECT * FROM article WHERE id = :id");
         $req->execute([
             ":id" => $id
@@ -63,9 +77,13 @@ class ArticleDao extends AbstractDao implements ArticleDaoInterface
         }
     }
 
+    /**
+     * Edition d'un article
+     *
+     * @param Article $article Article à éditer
+     */
     public function edit(Article $article): void
     {
-        // Mise à jour l'article
         $req = $this->pdo->prepare("UPDATE article
                             SET title = :title, content = :content
                             WHERE id = :id");
@@ -76,9 +94,13 @@ class ArticleDao extends AbstractDao implements ArticleDaoInterface
         ]);
     }
 
+    /**
+     * Suppression d'un article
+     *
+     * @param int $id Identifiant de l'article à supprimer
+     */
     public function delete(int $id): void
     {
-        // Suppression de l'Article
         $req = $this->pdo->prepare("DELETE FROM article WHERE id = :id");
         $req->execute([
             ":id" => $id

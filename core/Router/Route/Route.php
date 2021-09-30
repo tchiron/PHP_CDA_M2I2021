@@ -2,8 +2,18 @@
 
 namespace core\Router\Route;
 
+/**
+ * Représente une route
+ */
 class Route
 {
+    /**
+     * @param $regex string contient la regex de la query string
+     * @param $methods string[] contient un tableau des méthodes d'accès la route
+     * @param $controller string contient le nom complet du controller (controller + namespace) où s'éxecutera l'action
+     * @param $action string contient le nom de l'action qui devra s'éxecuter
+     * @param $name string contient le nom de la route
+     */
     public function __construct(
         private string $regex,
         private array $methods,
@@ -26,7 +36,7 @@ class Route
     /**
      * Get the value of methods
      *
-     * @return array
+     * @return string[]
      */
     public function getMethods(): array
     {
