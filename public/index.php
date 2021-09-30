@@ -1,5 +1,6 @@
 <?php
 
+use core\Database;
 use core\Router\Exception\RouteNotFoundException;
 use core\Router\Router;
 
