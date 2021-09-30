@@ -24,9 +24,9 @@ interface ArticleDaoInterface {
      * Récupération d'un article en fonction de son identifiant
      *
      * @param int $id Identifiant de l'article à récupérer
-     * @return Article|null Renvoi l'article si il en trouve un, sinon renvoi null
+     * @return Article|false Renvoi l'article si il en trouve un, sinon renvoi false
      */
-    public function getById(int $id): ?Article;
+    public function getById(int $id): Article|false;
 
     /**
      * Edition d'un article

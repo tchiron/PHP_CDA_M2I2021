@@ -16,18 +16,7 @@ class ArticleDao extends AbstractDao implements ArticleDaoInterface
     {
         $req = $this->pdo->prepare("SELECT * FROM article");
         $req->execute();
-        $result = $req->fetchAll(PDO::FETCH_ASSOC);
-
-        // Parser les données récupérer
-        // et en faire un tableau d'Article
-        foreach ($result as $key => $article) {
-            $result[$key] = (new Article())->setId($article['id'])
-                ->setTitle($article['title'])
-                ->setContent($article['content'])
-                ->setCreatedAt($article['created_at']);
-        }
-
-        return $result;
+        return $req->fetchAll(PDO::FETCH_CLASS, Article::class);
     }
 
     /**
@@ -54,27 +43,15 @@ class ArticleDao extends AbstractDao implements ArticleDaoInterface
      * Récupération d'un article en fonction de son identifiant
      *
      * @param int $id Identifiant de l'article à récupérer
-     * @return Article|null Renvoi l'article si il en trouve un, sinon renvoi null
+     * @return Article|false Renvoi l'article si il en trouve un, sinon renvoi false
      */
-    public function getById(int $id): ?Article
+    public function getById(int $id): Article|false
     {
         $req = $this->pdo->prepare("SELECT * FROM article WHERE id = :id");
         $req->execute([
             ":id" => $id
         ]);
-        $result = $req->fetch(PDO::FETCH_ASSOC);
-
-        // Parser les données récupérer
-        // et instancier un nouvel Article
-        // qu'on retourne avec les données récupérées
-        if (!empty($result)) {
-            return (new Article())->setId($result['id'])
-                ->setTitle($result['title'])
-                ->setContent($result['content'])
-                ->setCreatedAt($result['created_at']);
-        } else {
-            return null;
-        }
+        return $req->fetchObject(Article::class);
     }
 
     /**

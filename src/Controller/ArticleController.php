@@ -112,7 +112,7 @@ class ArticleController
             // Récupération de l'article en fonction de son identifiant
             $article = (new ArticleDao())->getById($id);
 
-            if (!is_null($article)) {
+            if ($article instanceof Article) {
                 // Démarage de la mise en tampon
                 ob_start();
                 $title = $article->getTitle();
@@ -149,7 +149,7 @@ class ArticleController
             // Récupération de l'article en fonction de son identifiant
             $article = $articleDao->getById($id);
 
-            if (is_null($article)) {
+            if ($article instanceof Article) {
                 header("Location: /"); // ou error 404
                 exit;
             } elseif ('GET' === $request_method) {
