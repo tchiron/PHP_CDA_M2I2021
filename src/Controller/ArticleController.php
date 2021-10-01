@@ -9,14 +9,13 @@ use PDOException;
 /**
  * Controller du model Article
  */
-class ArticleController
+class ArticleController extends AbstractController
 {
     /**
      * Affichage de tous les articles
      */
     public function index(): void
     {
-        // Récupérer tous les articles
         try {
             $articles = (new ArticleDao())->getAll();
         } catch (PDOException $e) {
@@ -24,16 +23,11 @@ class ArticleController
             // require implode(DIRECTORY_SEPARATOR, [TEMPLATES, "error500.html.php"]);
         }
 
-        // Démarage de la mise en tampon
-        ob_start();
-        $title = 'Accueil';
-        // Appel de la vue
-        require implode(DIRECTORY_SEPARATOR, [TEMPLATES, "article", "index.html.php"]);
-        // Récupération et enregistrement des données dans une variable et suppression de la mémoire tampon
-        $content = ob_get_clean(); // Equivaut à ob_get_content() suivi de ob_end_clean()
-
-        // Appel du layout
-        require implode(DIRECTORY_SEPARATOR, [TEMPLATES, "layout.html.php"]);
+        $this->renderer->render(
+            ["layout.html.php"],
+            ["article", "index.html.php"],
+            ["title" => 'Accueil', "articles" => $articles]
+        );
     }
 
     /**
@@ -44,16 +38,11 @@ class ArticleController
         $request_method = filter_input(INPUT_SERVER, "REQUEST_METHOD");
 
         if ('GET' === $request_method) {
-            // Démarage de la mise en tampon
-            ob_start();
-            $title = 'Nouvel article';
-            // Appel de la vue
-            require implode(DIRECTORY_SEPARATOR, [TEMPLATES, 'article', 'new.html.php']);
-            // Récupération et enregistrement des données dans une variable et suppression de la mémoire tampon
-            $content = ob_get_clean();
-
-            // Appel du layout
-            require implode(DIRECTORY_SEPARATOR, [TEMPLATES, "layout.html.php"]);
+            $this->renderer->render(
+                ["layout.html.php"],
+                ["article", "new.html.php"],
+                ["title" => 'Nouvel article']
+            );
         } elseif ('POST' === $request_method) {
             // Récupération des données envoyées depuis le formulaire
             $args = [
@@ -87,16 +76,11 @@ class ArticleController
                     echo $e->getMessage();
                 }
             } else {
-                // Démarage de la mise en tampon
-                ob_start();
-                $title = 'Nouvel article';
-                // Appel de la vue
-                require implode(DIRECTORY_SEPARATOR, [TEMPLATES, 'article', 'new.html.php']);
-                // Récupération et enregistrement des données dans une variable et suppression de la mémoire tampon
-                $content = ob_get_clean();
-
-                // Appel du layout
-                require implode(DIRECTORY_SEPARATOR, [TEMPLATES, "layout.html.php"]);
+                $this->renderer->render(
+                    ["layout.html.php"],
+                    ["article", "new.html.php"],
+                    ["title" => 'Nouvel article', "error_messages" => $error_messages, "article" => $article]
+                );
             }
         }
     }
@@ -113,16 +97,11 @@ class ArticleController
             $article = (new ArticleDao())->getById($id);
 
             if ($article instanceof Article) {
-                // Démarage de la mise en tampon
-                ob_start();
-                $title = $article->getTitle();
-                // Appel de la vue
-                require implode(DIRECTORY_SEPARATOR, [TEMPLATES, "article", "show.html.php"]);
-                // Récupération et enregistrement des données dans une variable et suppression de la mémoire tampon
-                $content = ob_get_clean();
-
-                // Appel du layout
-                require implode(DIRECTORY_SEPARATOR, [TEMPLATES, "layout.html.php"]);
+                $this->renderer->render(
+                    ["layout.html.php"],
+                    ["article", "show.html.php"],
+                    ["title" => $article->getTitle(), 'article' => $article]
+                );
             } else {
                 header("Location: /");
                 exit;
@@ -153,16 +132,11 @@ class ArticleController
                 header("Location: /"); // ou error 404
                 exit;
             } elseif ('GET' === $request_method) {
-                // Démarage de la mise en tampon
-                ob_start();
-                $title = "Editer {$article->getTitle()}";
-                // Appel de la vue
-                require implode(DIRECTORY_SEPARATOR, [TEMPLATES, "article", "edit.html.php"]);
-                // Récupération et enregistrement des données dans une variable et suppression de la mémoire tampon
-                $content = ob_get_clean();
-
-                // Appel du layout
-                require implode(DIRECTORY_SEPARATOR, [TEMPLATES, "layout.html.php"]);
+                $this->renderer->render(
+                    ["layout.html.php"],
+                    ["article", "edit.html.php"],
+                    ["title" => "Editer {$article->getTitle()}", "article" => $article]
+                );
             } elseif ('POST' === $request_method) {
                 // Récupération des données envoyées depuis le formulaire
                 $args = [
@@ -192,16 +166,15 @@ class ArticleController
                     header(sprintf("Location: /article/%d/show", $id));
                     exit;
                 } else {
-                    // Démarage de la mise en tampon
-                    ob_start();
-                    $title = "Editer {$article->getTitle()}";
-                    // Appel de la vue
-                    require implode(DIRECTORY_SEPARATOR, [TEMPLATES, "article", "edit.html.php"]);
-                    // Récupération et enregistrement des données dans une variable et suppression de la mémoire tampon
-                    $content = ob_get_clean();
-
-                    // Appel du layout
-                    require implode(DIRECTORY_SEPARATOR, [TEMPLATES, "layout.html.php"]);
+                    $this->renderer->render(
+                        ["layout.html.php"],
+                        ["article", "edit.html.php"],
+                        [
+                            "title" => "Editer {$article->getTitle()}",
+                            "article" => $article,
+                            "error_messages" => $error_messages
+                        ]
+                    );
                 }
             }
         } catch (PDOException $e) {

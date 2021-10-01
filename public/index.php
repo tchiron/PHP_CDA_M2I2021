@@ -1,6 +1,7 @@
 <?php
 
 use core\Database;
+use core\Renderer;
 use core\Router\Exception\RouteNotFoundException;
 use core\Router\Router;
 
@@ -34,7 +35,7 @@ try {
      * équivaut à : (new App\Controller\ArticleController())->index()
      * équivaut à : (new App\Controller\ArticleController())->show($id)
      */
-    (new ($route->getController())())->{$route->getAction()}(...$router->getMatches());
+    (new ($route->getController())(Renderer::getInstance()))->{$route->getAction()}(...$router->getMatches());
 } catch (RouteNotFoundException $e) {
     echo $e->getMessage();
     // header("Location: /"); // ou error 404
