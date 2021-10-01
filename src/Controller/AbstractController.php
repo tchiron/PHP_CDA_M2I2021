@@ -15,6 +15,12 @@ abstract class AbstractController
     {
     }
 
+    /**
+     * Rediriges vers une route
+     *
+     * @param string $name Nom de la route
+     * @param array $options Tableau de valeur a replacer dans la query string, Attention à bien respecter l'ordre
+     */
     protected function redirectToRoute(string $name, array $options = [])
     {
         try {
