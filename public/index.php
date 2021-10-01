@@ -35,7 +35,7 @@ try {
      * équivaut à : (new App\Controller\ArticleController())->index()
      * équivaut à : (new App\Controller\ArticleController())->show($id)
      */
-    (new ($route->getController())(Renderer::getInstance()))->{$route->getAction()}(...$router->getMatches());
+    (new ($route->getController())(Router::getInstance(), Renderer::getInstance()))->{$route->getAction()}(...$router->getMatches());
 } catch (RouteNotFoundException $e) {
     echo $e->getMessage();
     // header("Location: /"); // ou error 404

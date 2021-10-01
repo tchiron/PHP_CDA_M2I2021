@@ -70,8 +70,7 @@ class ArticleController extends AbstractController
                     // Création du nouvel article et récupération de son identifiant
                     $id = (new ArticleDao())->new($article);
                     // Redirection sur l'affiche de l'article nouvellement créée
-                    header(sprintf("Location: /article/%d/show", $id));
-                    exit;
+                    $this->redirectToRoute('show_article', [$id]);
                 } catch (PDOException $e) {
                     echo $e->getMessage();
                 }
@@ -103,8 +102,7 @@ class ArticleController extends AbstractController
                     ["title" => $article->getTitle(), 'article' => $article]
                 );
             } else {
-                header("Location: /");
-                exit;
+                $this->redirectToRoute('home');
             }
         } catch (PDOException $e) {
             echo $e->getMessage();
@@ -129,8 +127,7 @@ class ArticleController extends AbstractController
             $article = $articleDao->getById($id);
 
             if (!$article instanceof Article) {
-                header("Location: /"); // ou error 404
-                exit;
+                $this->redirectToRoute('home');
             } elseif ('GET' === $request_method) {
                 $this->renderer->render(
                     ["layout.html.php"],
@@ -163,8 +160,7 @@ class ArticleController extends AbstractController
                     // Edition de l'article
                     $articleDao->edit($article);
                     // Redirection vers l'article éditée
-                    header(sprintf("Location: /article/%d/show", $id));
-                    exit;
+                    $this->redirectToRoute('show_article', [$id]);
                 } else {
                     $this->renderer->render(
                         ["layout.html.php"],
@@ -192,8 +188,7 @@ class ArticleController extends AbstractController
         try {
             //Suppression de l'article en fonction de son identifiant
             (new ArticleDao())->delete($id);
-            header("Location: /");
-            exit;
+            $this->redirectToRoute('home');
         } catch (PDOException $e) {
             echo $e->getMessage();
         }

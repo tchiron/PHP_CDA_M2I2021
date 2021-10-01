@@ -50,7 +50,7 @@ class Router
         }
 
         throw new RouteNotFoundException(sprintf(
-            "Route not found for uri %s and method %s",
+            "Route not found for uri \"%s\" and method \"%s\"",
             filter_input(INPUT_SERVER, 'REQUEST_URI'),
             filter_input(INPUT_SERVER, "REQUEST_METHOD")
         ));
@@ -100,5 +100,20 @@ class Router
     public function getMatches(): array
     {
         return $this->matches;
+    }
+
+    /**
+     * @param string $name
+     * @return Route
+     */
+    public function findRoute(string $name): Route
+    {
+        foreach ($this->routes as $route){
+            if ($route->getName() === $name) {
+                return $route;
+            }
+        }
+
+        throw new RouteNotFoundException(sprintf("Route not found for name \"%s\"", $name));
     }
 }
