@@ -128,7 +128,7 @@ class ArticleController extends AbstractController
             // Récupération de l'article en fonction de son identifiant
             $article = $articleDao->getById($id);
 
-            if ($article instanceof Article) {
+            if (!$article instanceof Article) {
                 header("Location: /"); // ou error 404
                 exit;
             } elseif ('GET' === $request_method) {
