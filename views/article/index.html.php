@@ -3,7 +3,7 @@
 foreach ($articles as $article) : ?>
     <article>
         <h2><?= $article->getTitle() ?></h2>
-        <span><?= $article->getCreatedAt() ?></span>
+        <span><?= $article->getCreatedAtFormat() ?></span>
         <p><?= nl2br($article->getContent()) ?></p>
         <a href="<?= sprintf('/article/%d/show', $article->getId()) ?>">Voir l'article</a>
     </article>

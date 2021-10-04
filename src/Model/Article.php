@@ -2,6 +2,8 @@
 
 namespace App\Model;
 
+use DateTime;
+
 class Article
 {
     /**
@@ -99,23 +101,33 @@ class Article
     /**
      * Get the value of created_at
      *
+     * @return DateTime
+     */
+    public function getCreatedAt(): DateTime
+    {
+        return new DateTime($this->created_at);
+    }
+
+    /**
+     * Get the value of created_at
+     *
      * @return string
      */
-    public function getCreatedAt(): string
+    public function getCreatedAtFormat(): string
     {
-        return $this->created_at;
+        return (new DateTime($this->created_at))->format('l d F Y à G:i:s');
     }
 
     /**
      * Set the value of created_at
      *
-     * @param string $created_at
+     * @param DateTime $created_at
      *
      * @return self
      */
-    public function setCreatedAt(string $created_at): self
+    public function setCreatedAt(DateTime $created_at): self
     {
-        $this->created_at = $created_at;
+        $this->created_at = $created_at->format('Y-m-d G:i:s');
 
         return $this;
     }
