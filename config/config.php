@@ -22,3 +22,8 @@ define('TEMPLATES', implode(DIRECTORY_SEPARATOR, [ROOT, "views"]));
  */
 define("MYSQL_FILE_PATH", implode(DIRECTORY_SEPARATOR, [ROOT, 'config', 'mysql.ini']));
 
+/**
+ * Définition d'une constante pour la base de données utilisée
+ */
+define('RDBMS', "mysql");
+

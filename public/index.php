@@ -1,6 +1,6 @@
 <?php
 
-use core\{ControllerFactory, Database, Renderer};
+use core\{ControllerFactory, Database, DIContainer, Renderer};
 use core\Router\Exception\RouteNotFoundException;
 use core\Router\Router;
 
@@ -31,10 +31,12 @@ try {
     /**
      * Instancies le controller et l'action de la route qui correspond à la requête
      *
-     * équivaut à : (new App\Controller\ArticleController())->index()
-     * équivaut à : (new App\Controller\ArticleController())->show($id)
+     * équivaut à : (new App\Controller\ArticleController())->index($articleDao)
+     * équivaut à : (new App\Controller\ArticleController())->show($articleDao, $id)
      */
-    ControllerFactory::create($route->getController())->{$route->getAction()}(...$router->getMatches());
+    $dic = new DIContainer();
+    $dic->getController($route->getController())
+        ->{$route->getAction()}($dic->getDao($route->getController()) ,...$router->getMatches());
 } catch (RouteNotFoundException $e) {
     echo $e->getMessage();
     // header("Location: /"); // ou error 404

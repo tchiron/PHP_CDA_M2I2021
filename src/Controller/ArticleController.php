@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use App\Dao\ArticleDao;
+use App\Dao\ArticleDaoInterface;
 use App\Model\Article;
 use PDOException;
 
@@ -14,10 +14,10 @@ class ArticleController extends AbstractController
     /**
      * Affichage de tous les articles
      */
-    public function index(): void
+    public function index(ArticleDaoInterface $articleDao): void
     {
         try {
-            $articles = (new ArticleDao())->getAll();
+            $articles = $articleDao->getAll();
         } catch (PDOException $e) {
             echo $e->getMessage();
             // require implode(DIRECTORY_SEPARATOR, [TEMPLATES, "error500.html.php"]);
@@ -33,7 +33,7 @@ class ArticleController extends AbstractController
     /**
      * Création d'un nouvel article
      */
-    public function new(): void
+    public function new(ArticleDaoInterface $articleDao): void
     {
         $request_method = filter_input(INPUT_SERVER, "REQUEST_METHOD");
 
@@ -68,7 +68,7 @@ class ArticleController extends AbstractController
             if (empty($error_messages)) {
                 try {
                     // Création du nouvel article et récupération de son identifiant
-                    $id = (new ArticleDao())->new($article);
+                    $id = $articleDao->new($article);
                     // Redirection sur l'affiche de l'article nouvellement créée
                     $this->redirectToRoute('show_article', [$id]);
                 } catch (PDOException $e) {
@@ -89,11 +89,11 @@ class ArticleController extends AbstractController
      *
      * @param int $id Identifiant de l'article
      */
-    public function show(int $id): void
+    public function show(ArticleDaoInterface $articleDao, int $id): void
     {
         try {
             // Récupération de l'article en fonction de son identifiant
-            $article = (new ArticleDao())->getById($id);
+            $article = $articleDao->getById($id);
 
             if ($article instanceof Article) {
                 $this->renderer->render(
@@ -114,15 +114,13 @@ class ArticleController extends AbstractController
      *
      * @param int $id Identifiant de l'article
      */
-    public function edit(int $id): void
+    public function edit(ArticleDaoInterface $articleDao, int $id): void
     {
 
         $request_method = filter_input(INPUT_SERVER, "REQUEST_METHOD");
 
         // Récupérer un article en fonction de son id
         try {
-            // Intanciation d'un ArticleDao
-            $articleDao = new ArticleDao();
             // Récupération de l'article en fonction de son identifiant
             $article = $articleDao->getById($id);
 
@@ -183,11 +181,11 @@ class ArticleController extends AbstractController
      *
      * @param int $id Identifiant de l'article
      */
-    public function delete(int $id): void
+    public function delete(ArticleDaoInterface $articleDao, int $id): void
     {
         try {
             //Suppression de l'article en fonction de son identifiant
-            (new ArticleDao())->delete($id);
+            $articleDao->delete($id);
             $this->redirectToRoute('home');
         } catch (PDOException $e) {
             echo $e->getMessage();

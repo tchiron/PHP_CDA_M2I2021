@@ -5,7 +5,7 @@ namespace App\Dao;
 use App\Model\Article;
 use PDO;
 
-class ArticleDao extends AbstractDao implements ArticleDaoInterface
+class MysqlArticleDao extends AbstractDao implements ArticleDaoInterface
 {
     /**
      * Récupération de tous les articles
