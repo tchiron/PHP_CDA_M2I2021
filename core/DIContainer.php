@@ -14,7 +14,6 @@ class DIContainer
 
     public function getDao(string $daoName): AbstractDao
     {
-        $daoPath = sprintf("App\Dao\%s%sDao", ucfirst(strtolower(RDBMS)), ucfirst(strtolower($daoName)));
-        return new $daoPath(Database::getInstance()->getConnexion());
+        return DaoFactory::create($daoName);
     }
 }
