@@ -31,12 +31,12 @@ try {
     /**
      * Instancies le controller et l'action de la route qui correspond à la requête
      *
-     * équivaut à : (new App\Controller\ArticleController())->index($articleDao)
-     * équivaut à : (new App\Controller\ArticleController())->show($articleDao, $id)
+     * équivaut à : (new App\Controller\ArticleController())->index(new MysqlArticleDao())
+     * équivaut à : (new App\Controller\ArticleController())->show(new MysqlArticleDao(), $id)
      */
     $dic = new DIContainer();
     $dic->getController($route->getController())
-        ->{$route->getAction()}($dic->getDao($route->getController()) ,...$router->getMatches());
+        ->{$route->getAction()}($dic->getDao($route->getController()), ...$router->getMatches());
 } catch (RouteNotFoundException $e) {
     echo $e->getMessage();
     // header("Location: /"); // ou error 404
